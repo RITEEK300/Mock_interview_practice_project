@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mockly // Secure the Bag</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<div class="blob-c">
+    <div class="shape-blob"></div>
+    <div class="shape-blob one"></div>
+    <div class="shape-blob two"></div>
+</div>
+
+<div class="container d-flex justify-content-center align-items-center min-vh-100">
+    <div class="main-card p-5">
+        <div class="text-center mb-5">
+            <h1 class="logo-text">Mockingly<span>.</span></h1>
+            <p class="subtitle">Level up your interview game. 🚀</p>
+        </div>
+
+        <div class="row g-5">
+            <div class="col-md-6 auth-section">
+                <h3 class="section-title">Welcome back 👋</h3>
+                <form id="loginForm">
+                    <div class="form-floating mb-3">
+                        <input type="email" id="loginEmail" class="form-control custom-input" placeholder="name@example.com" required>
+                        <label for="loginEmail">Email</label>
+                    </div>
+                    <div class="form-floating mb-3">
+                        <input type="password" id="loginPassword" class="form-control custom-input" placeholder="Password" required>
+                        <label for="loginPassword">Password</label>
+                    </div>
+                    <button type="submit" class="btn btn-main w-100">Login</button>
+                </form>
+            </div>
+
+            <div class="col-md-6 auth-section border-start-custom">
+                <h3 class="section-title">Join the squad ✨</h3>
+                <form id="signupForm">
+                    <div class="form-floating mb-3">
+                        <input type="text" id="signupName" class="form-control custom-input" placeholder="Full Name" required>
+                        <label for="signupName">Full Name</label>
+                    </div>
+                    <div class="form-floating mb-3">
+                        <input type="email" id="signupEmail" class="form-control custom-input" placeholder="Email" required>
+                        <label for="signupEmail">Email</label>
+                    </div>
+                    <div class="form-floating mb-3">
+                        <input type="password" id="signupPassword" class="form-control custom-input" placeholder="Password" required>
+                        <label for="signupPassword">Password</label>
+                    </div>
+                    <button type="submit" class="btn btn-outline-main w-100">Signup</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+<script>
+    const baseUrl = 'http://localhost:8080/api/auth';
+
+    const notify = (msg, type = "success") => {
+        Toastify({
+            text: msg,
+            duration: 3000,
+            gravity: "top",
+            position: "right",
+            style: {
+                background: type === "success" ? "linear-gradient(to right, #00b09b, #96c93d)" : "#ff4757",
+                borderRadius: "12px"
+            }
+        }).showToast();
+    };
+
+    // Login Logic
+    document.getElementById('loginForm').addEventListener('submit', async e => {
+        e.preventDefault();
+        const email = document.getElementById('loginEmail').value;
+        const password = document.getElementById('loginPassword').value;
+
+        try {
+            const res = await fetch(`${baseUrl}/login`, {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({email, password})
+            });
+            const data = await res.json();
+
+            if(res.ok){
+                localStorage.setItem('token', data.token);
+                notify("Logged in! Redirecting...");
+                setTimeout(() => window.location.href = 'profile.html', 1500);
+            } else {
+                notify(data.message || "Login failed 💀", "error");
+            }
+        } catch (err) {
+            notify("Server is ghosting us. Try again later.", "error");
+        }
+    });
+
+    // Signup Logic
+    document.getElementById('signupForm').addEventListener('submit', async e => {
+        e.preventDefault();
+        const name = document.getElementById('signupName').value;
+        const email = document.getElementById('signupEmail').value;
+        const password = document.getElementById('signupPassword').value;
+
+        try {
+            const res = await fetch(`${baseUrl}/signup`, {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({name, email, password})
+            });
+            const data = await res.json();
+            if(res.ok) notify("Account created! Now login to start.");
+            else notify(data.message || "Signup failed.", "error");
+        } catch (err) {
+            notify("Server error. Not very demure.", "error");
+        }
+    });
+</script>
+</body>
+</html>

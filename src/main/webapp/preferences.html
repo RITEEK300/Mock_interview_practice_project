@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Your Vibe // Profile</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<div class="blob-c">
+    <div class="shape-blob"></div>
+    <div class="shape-blob one"></div>
+    <div class="shape-blob two"></div>
+</div>
+
+<div class="container d-flex justify-content-center align-items-center min-vh-100">
+    <div class="main-card p-4 p-md-5 text-center">
+
+        <div class="avatar-container mb-4">
+            <div class="avatar-glow"></div>
+            <img src="https://api.dicebear.com/7.x/shapes/svg?seed=Felix" id="userAvatar" alt="Avatar" class="profile-img shadow">
+        </div>
+
+        <h2 class="fw-800 mb-1" id="userNameDisplay">Loading...</h2>
+        <p class="text-muted small mb-4" id="userEmailDisplay">@fetching_vibes</p>
+
+        <div id="profileDetails" class="profile-grid mb-4">
+            <div class="info-item">
+                <i data-lucide="graduation-cap"></i>
+                <span class="label">College</span>
+                <span class="value" id="val-college">...</span>
+            </div>
+            <div class="info-item">
+                <i data-lucide="git-branch"></i>
+                <span class="label">Branch</span>
+                <span class="value" id="val-branch">...</span>
+            </div>
+            <div class="info-item full-width">
+                <i data-lucide="sparkles"></i>
+                <span class="label">Bio</span>
+                <span class="value italic" id="val-bio">"Manifesting that dream offer..."</span>
+            </div>
+        </div>
+
+        <div class="d-flex gap-2 justify-content-center">
+            <button onclick="location.href='preference.html'" class="btn-secondary-custom">
+                <i data-lucide="settings"></i> Settings
+            </button>
+            <button id="logoutBtn" class="btn-danger-custom">
+                <i data-lucide="log-out"></i> Ghost
+            </button>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Initialize Icons
+    lucide.createIcons();
+
+    const token = localStorage.getItem('token');
+    if(!token){ window.location.href='index.html'; }
+
+    async function loadProfile(){
+        try {
+            const res = await fetch('http://localhost:8080/api/profile/me', {
+                headers: {Authorization: `Bearer ${token}`}
+            });
+            const user = await res.json();
+
+            // Update Text
+            document.getElementById('userNameDisplay').innerText = user.name;
+            document.getElementById('userEmailDisplay').innerText = user.email;
+            document.getElementById('val-college').innerText = user.college || 'N/A';
+            document.getElementById('val-branch').innerText = user.branch || 'N/A';
+            document.getElementById('val-bio').innerText = user.bio || 'No bio yet. Boring.';
+
+            // Refresh icons for new content
+            lucide.createIcons();
+        } catch (err) {
+            console.error("Vibe check failed", err);
+        }
+    }
+
+    document.getElementById('logoutBtn').addEventListener('click', ()=>{
+        localStorage.removeItem('token');
+        window.location.href = 'index.html';
+    });
+
+    loadProfile();
+</script>
+</body>
+</html>

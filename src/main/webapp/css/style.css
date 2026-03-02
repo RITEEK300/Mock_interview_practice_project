@@ -1,0 +1,98 @@
+/* --- Mockly Design System (Gen Z Edition) --- */
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&display=swap');
+
+:root {
+    --primary: #8a2be2;    /* Purple */
+    --secondary: #00f2ff;  /* Cyan */
+    --accent: #ff00c8;     /* Pink */
+    --dark-bg: #050508;
+    --glass: rgba(255, 255, 255, 0.05);
+    --border: rgba(255, 255, 255, 0.1);
+}
+
+body {
+    background-color: var(--dark-bg);
+    color: #fff;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    min-height: 100vh;
+    overflow-x: hidden;
+}
+
+/* Background Animated Blobs */
+.blob-c { position: fixed; inset: 0; filter: blur(80px); z-index: -1; }
+.shape-blob {
+    position: absolute; height: 450px; width: 450px;
+    border-radius: 50%; background: var(--primary);
+    animation: move 20s infinite alternate; opacity: 0.4;
+}
+.one { background: var(--secondary); top: -10%; right: -10%; }
+.two { background: var(--accent); bottom: -10%; left: -10%; animation-delay: -5s; }
+
+@keyframes move { from { transform: translate(0,0); } to { transform: translate(120px, 120px); } }
+
+/* Reusable Glass Card */
+.main-card {
+    background: var(--glass);
+    backdrop-filter: blur(25px);
+    border: 1px solid var(--border);
+    border-radius: 30px;
+    padding: 2.5rem;
+    box-shadow: 0 25px 50px rgba(0,0,0,0.5);
+}
+
+/* Typography */
+.logo-text { font-weight: 800; font-size: 2.8rem; letter-spacing: -2px; }
+.logo-text span { color: var(--secondary); }
+
+/* Forms & Inputs */
+.form-control {
+    background: rgba(255,255,255,0.06) !important;
+    border: 1px solid var(--border) !important;
+    color: white !important;
+    border-radius: 15px;
+    padding: 14px;
+    margin-bottom: 1rem;
+}
+
+.form-control:focus {
+    border-color: var(--secondary) !important;
+    box-shadow: 0 0 15px rgba(0, 242, 255, 0.2) !important;
+}
+
+/* Interactive Buttons */
+.btn-main {
+    background: linear-gradient(45deg, var(--primary), var(--accent));
+    border: none; color: white; padding: 14px; border-radius: 15px;
+    font-weight: 700; width: 100%;
+    transition: 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.btn-main:hover {
+    transform: scale(1.03) translateY(-3px);
+    box-shadow: 0 15px 30px rgba(138,43,226,0.4);
+}
+
+.btn-outline-custom {
+    background: transparent; border: 1px solid var(--border);
+    color: #888; border-radius: 12px; padding: 10px 20px;
+    transition: 0.3s;
+}
+
+.btn-outline-custom:hover { border-color: #fff; color: #fff; }
+
+/* Dashboard Specifics */
+.avatar-glow {
+    width: 100px; height: 100px; margin: 0 auto 1.5rem;
+    background: var(--secondary); border-radius: 24px;
+    box-shadow: 0 0 30px var(--secondary);
+}
+
+.role-badge {
+    padding: 5px 12px; border-radius: 8px;
+    font-size: 0.75rem; font-weight: 800; text-transform: uppercase;
+}
+.role-badge.admin { background: var(--primary); color: white; }
+.role-badge.user { background: var(--border); color: #ccc; }
+
+.fade-in { animation: fadeInUp 0.6s ease forwards; }
+@keyframes fadeInUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }

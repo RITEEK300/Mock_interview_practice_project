@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mockly // God Mode</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body class="admin-body">
+
+<div class="blob-c">
+    <div class="shape-blob one"></div>
+    <div class="shape-blob two"></div>
+</div>
+
+<div class="container py-5">
+    <div class="d-flex justify-content-between align-items-end mb-5">
+        <div>
+            <h1 class="logo-text">God Mode<span>.</span></h1>
+            <p class="text-muted mb-0">Managing the squad and keeping it 100.</p>
+        </div>
+        <div class="admin-badge">
+            <i data-lucide="shield-check"></i> Admin Verified
+        </div>
+    </div>
+
+    <div class="row g-4 mb-5">
+        <div class="col-md-4">
+            <div class="stat-card">
+                <span class="label">Total Users</span>
+                <h2 id="totalUsersCount">0</h2>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="stat-card">
+                <span class="label">Active Now</span>
+                <h2 class="text-success">Live ⚡</h2>
+            </div>
+        </div>
+        <div class="col-md-4 text-end">
+            <button id="logoutBtn" class="btn-ghost">Log Out</button>
+        </div>
+    </div>
+
+    <div class="main-card glass-table-container">
+        <div class="table-header p-4">
+            <h3 class="m-0 h5 fw-bold">User Directory</h3>
+        </div>
+        <div class="table-responsive">
+            <table class="table custom-admin-table mb-0">
+                <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Member</th>
+                    <th>Email</th>
+                    <th>Status</th>
+                    <th>Action</th>
+                </tr>
+                </thead>
+                <tbody id="userList">
+                <tr id="loaderRow"><td colspan="5" class="text-center py-5">Fetching the vibes...</td></tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<script>
+    lucide.createIcons();
+    const token = localStorage.getItem('token');
+    if(!token){ window.location.href='index.html'; }
+
+    async function loadUsers(){
+        try {
+            const res = await fetch('http://localhost:8080/api/admin/users',{
+                headers:{Authorization:`Bearer ${token}`}
+            });
+            const users = await res.json();
+            const tbody = document.getElementById('userList');
+            document.getElementById('totalUsersCount').innerText = users.length;
+
+            tbody.innerHTML = '';
+            users.forEach((u, index) => {
+                tbody.innerHTML += `
+            <tr style="animation-delay: ${index * 0.1}s" class="fade-in-row">
+              <td class="text-muted">#${u.id}</td>
+              <td class="fw-bold">${u.name}</td>
+              <td>${u.email}</td>
+              <td><span class="role-badge ${u.role === 'admin' ? 'admin' : 'user'}">${u.role}</span></td>
+              <td><button class="btn-icon"><i data-lucide="more-horizontal"></i></button></td>
+            </tr>`;
+            });
+            lucide.createIcons();
+        } catch (err) {
+            document.getElementById('userList').innerHTML = '<tr><td colspan="5" class="text-center text-danger">Failed to load users. Major L.</td></tr>';
+        }
+    }
+
+    document.getElementById('logoutBtn').addEventListener('click', ()=>{
+        localStorage.removeItem('token');
+        window.location.href = 'index.html';
+    });
+
+    loadUsers();
+</script>
+</body>
+</html>
