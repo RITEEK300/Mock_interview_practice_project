@@ -5,12 +5,12 @@ import lombok.Setter;
 
 @Getter @Setter
 public class ResponseDTO {
-    private String message;
+    private String messages;
     private boolean success;
     private Object data;
 
     public ResponseDTO(String message, boolean success, Object data) {
-        this.message = message;
+        this.messages = message;
         this.success = success;
         this.data = data;
     }
